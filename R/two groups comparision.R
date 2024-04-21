@@ -42,7 +42,12 @@
 #' stat2(data = df,group = "Sex",value = "Freq", formula = Freq ~ Sex) # Ignoring variable and id
 #' }
 
-stat2 <- function(data, group, value, formula,variable = FALSE, id = "id",
+stat2 <- function(data,
+                  group,
+                  value,
+                  formula,
+                  variable = FALSE,
+                  id = "id",
                   sap.size = 30, ...){
 
   if (variable == FALSE) {

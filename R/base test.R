@@ -37,7 +37,11 @@
 #' tf(data = df,variable = "supp",id="VC",formula = len ~ dose)
 #' }
 
-tf <- function(data, variable, id,formula,var.equal = TRUE,...) {
+tf <- function(data,
+               variable,
+               id,
+               formula,
+               var.equal = TRUE,...) {
   data %>%
     filter(.data[[variable]] == id) %>%
     t_test(formula,...)
@@ -85,7 +89,11 @@ tf <- function(data, variable, id,formula,var.equal = TRUE,...) {
 #' welch_tf(data = df,variable = "supp",id="VC",formula = len ~ dose)
 #' }
 
-welch_tf <- function(data, variable, id,formula,var.equal = FALSE,...) {
+welch_tf <- function(data,
+                     variable,
+                     id,
+                     formula,
+                     var.equal = FALSE,...) {
   data %>%
     filter(.data[[variable]] == id) %>%
     t_test(formula,...)
@@ -132,7 +140,11 @@ welch_tf <- function(data, variable, id,formula,var.equal = FALSE,...) {
 #' wf(data = df,variable = "supp",id="VC",formula = len ~ dose)
 #' }
 
-wf <- function(data, variable, id,formula,var.equal = FALSE,...) {
+wf <- function(data,
+               variable,
+               id,
+               formula,
+               var.equal = FALSE,...) {
   data %>%
     filter(.data[[variable]] == id) %>%
     wilcox_test(formula,...)

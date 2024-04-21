@@ -18,5 +18,8 @@ RoxygenNote: 7.2.3
 Depends: 
     dplyr
 Imports: 
+    DescTools,
     rstatix,
-    stats
+    stats,
+    tibble,
+    tidyr
