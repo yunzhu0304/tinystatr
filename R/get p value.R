@@ -26,7 +26,8 @@
 #' }
 
 tf_p <- function(id,...){
-  tpd <- tf(id,...)
+  tpd <- tf(id,...) %>%
+    select(group1, group2, n1, n2,p)
   tpd$variable <- id
   tpd$method <- "t test"
   return(tpd)
@@ -62,7 +63,8 @@ tf_p <- function(id,...){
 #' }
 
 weltf_p <- function(id,...){
-  tpd <- welch_tf(id,...)
+  tpd <- welch_tf(id,...) %>%
+    select(group1, group2, n1, n2,p)
   tpd$variable <- id
   tpd$method <- "Welch's t-test"
   return(tpd)
@@ -97,7 +99,8 @@ weltf_p <- function(id,...){
 #' }
 
 wf_p <- function(id,...){
-  tpd <- wf(id,...)
+  tpd <- wf(id,...) %>%
+    select(group1, group2, n1, n2,p)
   tpd$variable <- id
   tpd$method <- "Wilcoxon test"
   return(tpd)
