@@ -25,7 +25,10 @@ dunn_p(data, group, variable, id, formula, method = "bonferroni", ...)
 A data frame containing the p-values and additional information for each comparison.
 }
 \description{
-This function conducts a post-hoc test using Dunn's test with a specified adjustment method after filtering data based on a specified variable and its corresponding identifier.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{This function conducts a post-hoc test using Dunn's test with a
+specified adjustment method after filtering data based on a specified
+variable and its corresponding identifier.
+}\if{html}{\out{</div>}}
 }
 \examples{
 \donttest{

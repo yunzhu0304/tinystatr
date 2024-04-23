@@ -1,6 +1,8 @@
 #' @title Perform Statistical Test for More Than Two-group Comparison
 #' @description
-#'     Depending on the characteristics of the data, it automatically determines whether to use parametric tests (Anova, LSD(post-hoc)) or non-parametric tests (kruskal, Dunn's(post-hoc)).
+#'     Depending on the characteristics of the data, it automatically determines
+#'     whether to use parametric tests (Anova, HSD(post-hoc)) or non-parametric
+#'     tests (kruskal, Dunn's(post-hoc)).
 #'
 #' @param data A data frame containing the variables of interest.
 #' @param variable A character string specifying the name of the variable in \code{data} for which the test will be conducted. Ignore if not available.
@@ -13,6 +15,7 @@
 #' @return A data frame containing the results of the statistical test.
 #' @importFrom dplyr mutate select filter bind_rows
 #' @importFrom stats shapiro.test bartlett.test
+#' @importFrom rstatix add_significance
 #'
 #' @export
 #'
@@ -94,15 +97,17 @@ stat3 <- function(data,
     if (Vtest) {
       cat("Variance equal  \n")
       cat(" Anova\n")
-      stat3result[["stat"]] <<- lsd_p(data = data, group = group,
+      stat3result[["stat"]] <<- hsd_p(data = data, group = group,
                                       variable = variable, id = id,
-                                      formula = formula)
+                                      formula = formula) %>%
+                                      add_significance("p.adj")
     }else{
       cat("Variance unequal  \n")
       cat("Kruskal-Wallis \n")
       stat3result[["stat"]] <<-dunn_p(data = data, group = group,
                                       variable = variable, id = id,
-                                      formula = formula)
+                                      formula = formula)%>%
+                                      add_significance("p.adj")
     }
   }else{
     cat("Non-normally distributed  \n")
@@ -110,7 +115,8 @@ stat3 <- function(data,
     cat("Kruskal-Wallis \n")
     stat3result[["stat"]] <<-dunn_p(data = data, group = group,
                                     variable = variable, id = id,
-                                    formula = formula)
+                                    formula = formula)%>%
+                                    add_significance("p.adj")
   }
 
   stat3result[["normal"]] <<- nordata_save

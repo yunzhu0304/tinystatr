@@ -25,7 +25,9 @@ stat3(data, group, value, formula, variable = FALSE, id = "id", ...)
 A data frame containing the results of the statistical test.
 }
 \description{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{Depending on the characteristics of the data, it automatically determines whether to use parametric tests (Anova, LSD(post-hoc)) or non-parametric tests (kruskal, Dunn's(post-hoc)).
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Depending on the characteristics of the data, it automatically determines
+whether to use parametric tests (Anova, HSD(post-hoc)) or non-parametric
+tests (kruskal, Dunn's(post-hoc)).
 }\if{html}{\out{</div>}}
 }
 \examples{
