@@ -1,6 +1,6 @@
 Package: tinystatr
 Title: Automatically select statistical methods and return results
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Authors@R: 
     person(given = "Yun",
     family = "Zhu",

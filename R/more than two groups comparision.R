@@ -59,66 +59,100 @@ stat3 <- function(data,
                             normal = logical(),
                             meanvalue = numeric(),
                             sd = numeric())
+  small_groups <- data %>%
+    count(!!gro) %>%
+    filter(n < 3) %>%
+    pull(!!gro)
 
-  for (i in 1:length(unique(data[[group]]))) {
-    test_data <- data %>%
-      filter(!!gro == unique(!!gro)[i]) %>%
-      filter(!!vari == id) %>%
-      select(all_of(valu)) %>%
-      unlist() %>%
-      as.numeric()
-
-    Ntest <- if (length(unique(test_data)) == 1) FALSE else shapiro.test(test_data)$p.value > 0.05
-
-    new_row <- data.frame(group = unique(data[[group]])[i],
-                          variable = id,
-                          normal =  Ntest,
-                          meanvalue = mean(test_data),
-                          sd = sd(test_data))
-
-    nordis_data <- rbind(nordis_data, new_row)
-  }
-
-  if (exists("nordata_save")) {
-
-    nordata_save <- rbind(nordata_save, nordis_data)
+  if (length(small_groups) > 0) {
+    message("The following groups have less than 3 samples and are not included in the analysis: ", paste(small_groups, collapse = ", "))
+    ##去除少于三个样本的组
+    data <- data %>%
+      group_by(!!gro) %>%
+      filter(n() >= 3) %>%
+      ungroup()
   } else {
-
-    nordata_save <- nordis_data
+    cat("All groups have 3 or more samples. \n")
   }
 
-  if (sum(nordis_data$normal) == length(unique(data[[group]]))) {
-    cat("Normally distributed  \n")
+  if (length(unique(data[[group]])) < 3) {
+    if (length(unique(data[[group]])) == 2) {
+      stat2(data = data,group = group,variable = variable,
+            id = id, value = value, formula = formula)
 
-    Vtest <- data %>%
-      filter(!!vari == id) %>%
-      bartlett.test(data=., formula) %>%
-      .$p.value > 0.05
-    if (Vtest) {
-      cat("Variance equal  \n")
-      cat(" Anova\n")
-      stat3result[["stat"]] <<- hsd_p(data = data, group = group,
-                                      variable = variable, id = id,
-                                      formula = formula) %>%
-                                      add_significance("p.adj")
+      stat3result[["stat"]] <<- stat2result[["stat"]] %>%
+        select(group1,group2,p,method,variable) %>%
+        mutate(p1 = NA, P1method = NA)%>%
+        `colnames<-`(c("group1",  "group2","p.adj", "posthoc","variable","p1", "P1method"))%>%
+        add_significance("p.adj")
+
+      stat3result[["normal"]] <<- stat2result[["normal"]]
+
+      return(stat3result[["stat"]])
     }else{
+      warning("Unable to perform statistics as there are fewer than 2 groups.")
+    }
+  }else{
+    for (i in 1:length(unique(data[[group]]))) {
+      test_data <- data %>%
+        filter(!!gro == unique(!!gro)[i]) %>%
+        filter(!!vari == id) %>%
+        select(all_of(valu)) %>%
+        unlist() %>%
+        as.numeric()
+
+      Ntest <- if (length(unique(test_data)) == 1) FALSE else shapiro.test(test_data)$p.value > 0.05
+
+      new_row <- data.frame(group = unique(data[[group]])[i],
+                            variable = id,
+                            normal =  Ntest,
+                            meanvalue = mean(test_data),
+                            sd = sd(test_data))
+
+      nordis_data <- rbind(nordis_data, new_row)
+    }
+
+    if (exists("nordata_save")) {
+
+      nordata_save <- rbind(nordata_save, nordis_data)
+    } else {
+
+      nordata_save <- nordis_data
+    }
+
+    if (sum(nordis_data$normal) == length(unique(data[[group]]))) {
+      cat("Normally distributed  \n")
+
+      Vtest <- data %>%
+        filter(!!vari == id) %>%
+        bartlett.test(data=., formula) %>%
+        .$p.value > 0.05
+      if (Vtest) {
+        cat("Variance equal  \n")
+        cat(" Anova\n")
+        stat3result[["stat"]] <<- hsd_p(data = data, group = group,
+                                        variable = variable, id = id,
+                                        formula = formula) %>%
+          add_significance("p.adj")
+      }else{
+        cat("Variance unequal  \n")
+        cat("Kruskal-Wallis \n")
+        stat3result[["stat"]] <<-dunn_p(data = data, group = group,
+                                        variable = variable, id = id,
+                                        formula = formula) %>%
+          add_significance("p.adj")
+      }
+    }else{
+      cat("Non-normally distributed  \n")
       cat("Variance unequal  \n")
       cat("Kruskal-Wallis \n")
       stat3result[["stat"]] <<-dunn_p(data = data, group = group,
                                       variable = variable, id = id,
                                       formula = formula)%>%
-                                      add_significance("p.adj")
+        add_significance("p.adj")
     }
-  }else{
-    cat("Non-normally distributed  \n")
-    cat("Variance unequal  \n")
-    cat("Kruskal-Wallis \n")
-    stat3result[["stat"]] <<-dunn_p(data = data, group = group,
-                                    variable = variable, id = id,
-                                    formula = formula)%>%
-                                    add_significance("p.adj")
-  }
 
-  stat3result[["normal"]] <<- nordata_save
-  return(stat3result[["stat"]])
+    stat3result[["normal"]] <<- nordata_save
+    return(stat3result[["stat"]])
+  }
 }
