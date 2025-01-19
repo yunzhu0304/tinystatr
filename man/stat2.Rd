@@ -22,18 +22,21 @@ stat2(
 
 \item{value}{The variable representing the values to be analyzed.}
 
-\item{formula}{A formula specifying the relationship between variables.An optional formula specifying the structure of the statistical model to be tested.}
+\item{formula}{A formula specifying the relationship between variables.}
 
-\item{variable}{A character string specifying the name of the variable in \code{data} for which the test will be conducted. Ignore if not available.}
+\item{variable}{A character string specifying the name of the variable in \code{data} for which the test will be conducted. Defaults to FALSE if not available.}
 
-\item{id}{The identifier for each observation.A value to filter the \code{variable} by. Ignore if not available.}
+\item{id}{The identifier for each observation. Defaults to \code{"id"}.}
 
 \item{sap.size}{The sample size threshold for determining whether to use parametric tests. Default is 30.}
 
 \item{...}{Additional arguments to be passed to the statistical tests.}
 }
 \value{
-A list containing the results of the statistical tests.
+An S4 object of class \code{statresult}, which includes:
+\item{stat}{A data frame containing the statistical test results.}
+\item{normal}{A data frame with normality test results for each group.}
+\item{p_position}{A data frame indicating the position of p-values for visualization purposes.}
 }
 \description{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{Depending on the characteristics of the data, it automatically determines whether to use parametric tests (t-test, Welch's t-test) or non-parametric tests (Wilcoxon test).
@@ -42,21 +45,17 @@ A list containing the results of the statistical tests.
 \examples{
 \donttest{
 # Load data
-#:::::::::::::::::::::::::::::::::::::::
-# Dataframe with multiple columns, need to filter variable
 data("ToothGrowth")
 
-df <- ToothGrowth\%>\%
-filter(dose \%in\% c("0.5","1"))
+df <- ToothGrowth \%>\%
+filter(dose \%in\% c("0.5", "1"))
 
-stat2(data = df,variable = "supp",id="VC",group = "dose",value = "len",
+result <- stat2(data = df, variable = "supp", id = "VC", group = "dose", value = "len",
 formula = len ~ dose)
 
-#:::::::::::::::::::::::::::::::::::::::
-# Dataframe with only two columns (group,value)
-data("HairEyeColor")
-df <- as.data.frame(HairEyeColor)[,c(3,4)]
-
-stat2(data = df,group = "Sex",value = "Freq", formula = Freq ~ Sex) # Ignoring variable and id
+# Inspect results
+result@stat
+result@normal
+result@p_position
 }
 }

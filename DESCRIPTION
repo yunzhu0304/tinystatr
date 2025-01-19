@@ -1,6 +1,6 @@
 Package: tinystatr
 Title: Automatically select statistical methods and return results
-Version: 0.0.0.9004
+Version: 0.0.0.9005
 Authors@R: 
     person(given = "Yun",
     family = "Zhu",
@@ -19,6 +19,7 @@ Depends:
     dplyr
 Imports: 
     DescTools,
+    methods,
     rstatix,
     stats,
     tibble,

@@ -2,33 +2,49 @@
 % Please edit documentation in R/more than two groups comparision.R
 \name{stat3}
 \alias{stat3}
-\title{Perform Statistical Test for More Than Two-group Comparison}
+\title{@title Perform Statistical Analysis with Post-hoc Tests and Visualization Positions}
 \usage{
 stat3(data, group, value, formula, variable = FALSE, id = "id", ...)
 }
 \arguments{
-\item{data}{A data frame containing the variables of interest.}
+\item{data}{A data frame containing the dataset to be analyzed.}
 
-\item{group}{The grouping variable for comparing groups.}
+\item{group}{A character string specifying the grouping variable (e.g., treatment groups).}
 
-\item{value}{The variable representing the values to be analyzed.}
+\item{value}{A character string specifying the response variable to be tested.}
 
-\item{formula}{A formula specifying the relationship between variables.An optional formula specifying the structure of the statistical model to be tested.}
+\item{formula}{A formula object specifying the statistical model (e.g., \code{value ~ group}).}
 
-\item{variable}{A character string specifying the name of the variable in \code{data} for which the test will be conducted. Ignore if not available.}
+\item{variable}{A logical value indicating whether the dataset contains a 'variable' column.
+If \code{FALSE}, a default "id" variable will be added. Default is \code{FALSE}.}
 
-\item{id}{The identifier for each observation.A value to filter the \code{variable} by. Ignore if not available.}
+\item{id}{A character string specifying the identifier for a particular variable to be analyzed.
+Default is \code{"id"}.}
 
-\item{...}{Additional arguments to be passed to the statistical tests.}
+\item{...}{Additional arguments passed to internal functions.}
 }
 \value{
-A data frame containing the results of the statistical test.
+An S4 object of class \code{statresult} with the following slots:
+\item{stat}{A data frame containing pairwise comparisons with adjusted p-values and test methods.}
+\item{normal}{A data frame summarizing normality test results, mean values, and standard deviations.}
+\item{p_position}{A data frame providing recommended y-axis positions for p-value annotations in plots.}
 }
 \description{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{Depending on the characteristics of the data, it automatically determines
-whether to use parametric tests (Anova, HSD(post-hoc)) or non-parametric
-tests (kruskal, Dunn's(post-hoc)).
-}\if{html}{\out{</div>}}
+@description This function conducts statistical tests (ANOVA or Kruskal-Wallis) to compare group means,
+performs post-hoc tests when necessary, and provides positions for p-value visualization.
+The results are returned as an S4 object containing statistical outcomes, normality tests,
+and recommended p-value positions for plotting.
+}
+\details{
+The function performs the following steps:
+\enumerate{
+\item Checks if there are at least three samples per group; groups with fewer samples are excluded.
+\item Evaluates normality using the Shapiro-Wilk test for each group.
+\item If data are normally distributed, Bartlett's test for homogeneity of variance is conducted.
+\item Depending on variance test results, an ANOVA or Kruskal-Wallis test is performed.
+\item Post-hoc tests (Tukey HSD for ANOVA or Dunn's test for Kruskal-Wallis) are applied when p < 0.05.
+\item Calculates appropriate positions for visualizing p-values on plots.
+}
 }
 \examples{
 \donttest{
@@ -37,14 +53,17 @@ tests (kruskal, Dunn's(post-hoc)).
 data("ToothGrowth")
 
 df <- ToothGrowth
-stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
+result <- stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
 
 #:::::::::::::::::::::::::::::::::::::::
 # Dataframe with only two columns (group,value)
 data("HairEyeColor")
 df <- as.data.frame(HairEyeColor)[,c(2,4)]
 
-stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
+result <- stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
 }
 
+result@stat # View statistical results
+result@normal # View normality test results
+result@p_position # View p-value positions for plotting
 }
