@@ -3,43 +3,40 @@
 #'     Depending on the characteristics of the data, it automatically determines whether to use parametric tests (t-test, Welch's t-test) or non-parametric tests (Wilcoxon test).
 #'
 #' @param data A data frame containing the variables of interest.
-#' @param variable A character string specifying the name of the variable in \code{data} for which the test will be conducted. Ignore if not available.
-#' @param id The identifier for each observation.A value to filter the \code{variable} by. Ignore if not available.
+#' @param variable A character string specifying the name of the variable in \code{data} for which the test will be conducted. Defaults to FALSE if not available.
+#' @param id The identifier for each observation. Defaults to \code{"id"}.
 #' @param group The grouping variable for comparing groups.
 #' @param value The variable representing the values to be analyzed.
-#' @param formula A formula specifying the relationship between variables.An optional formula specifying the structure of the statistical model to be tested.
+#' @param formula A formula specifying the relationship between variables.
 #' @param sap.size The sample size threshold for determining whether to use parametric tests. Default is 30.
 #' @param ... Additional arguments to be passed to the statistical tests.
 #'
-#' @return  A list containing the results of the statistical tests.
+#' @return An S4 object of class \code{statresult}, which includes:
+#' \item{stat}{A data frame containing the statistical test results.}
+#' \item{normal}{A data frame with normality test results for each group.}
+#' \item{p_position}{A data frame indicating the position of p-values for visualization purposes.}
 #'
 #' @importFrom rstatix levene_test
 #' @importFrom stats bartlett.test shapiro.test median sd
-#'
 #' @importFrom dplyr filter %>% mutate sym select all_of
-#'
 #'
 #' @export
 #'
 #' @examples
 #' \donttest{
 #' # Load data
-#' #:::::::::::::::::::::::::::::::::::::::
-#' # Dataframe with multiple columns, need to filter variable
 #' data("ToothGrowth")
 #'
-#' df <- ToothGrowth%>%
-#' filter(dose %in% c("0.5","1"))
+#' df <- ToothGrowth %>%
+#' filter(dose %in% c("0.5", "1"))
 #'
-#' stat2(data = df,variable = "supp",id="VC",group = "dose",value = "len",
+#' result <- stat2(data = df, variable = "supp", id = "VC", group = "dose", value = "len",
 #' formula = len ~ dose)
 #'
-#' #:::::::::::::::::::::::::::::::::::::::
-#' # Dataframe with only two columns (group,value)
-#' data("HairEyeColor")
-#' df <- as.data.frame(HairEyeColor)[,c(3,4)]
-#'
-#' stat2(data = df,group = "Sex",value = "Freq", formula = Freq ~ Sex) # Ignoring variable and id
+#' # Inspect results
+#' result@stat
+#' result@normal
+#' result@p_position
 #' }
 
 stat2 <- function(data,
@@ -59,7 +56,8 @@ stat2 <- function(data,
   gro <- sym(group)
   valu  <- sym(value)
 
-  stat2result <<- list()
+  setClass("statresult",slots=list(stat="data.frame",normal="data.frame",
+                                   p_position="data.frame"))
 
   nordis_data <- data.frame(group = character(),
                             variable = character(),
@@ -110,11 +108,11 @@ stat2 <- function(data,
       if (Vtest) {
         cat("Variance equal  \n")
         cat(" t-test\n")
-        stat2result[["stat"]] <<- tf_p(id = id,data = data,variable = variable,formula = formula)
+        stat2result <- tf_p(id = id,data = data,variable = variable,formula = formula)
       }else{
         cat("Variance unequal  \n")
         cat(" welch's t-test\n")
-        stat2result[["stat"]] <<-weltf_p(id = id,data = data,variable = variable,formula = formula)
+        stat2result <-weltf_p(id = id,data = data,variable = variable,formula = formula)
       }
     }
     if (sum(nordis_data$normal) == 1) {
@@ -133,24 +131,32 @@ stat2 <- function(data,
         if (Vtest) {
           cat("Variance equal  \n")
           cat(" welch's t-test\n")
-          stat2result[["stat"]] <<- weltf_p(id = id,data = data,variable = variable,formula = formula)
+          stat2result <- weltf_p(id = id,data = data,variable = variable,formula = formula)
         }else{
           cat("Variance unequal  \n")
           cat(" wilcoxon test\n")
-          stat2result[["stat"]] <<- wf_p(id = id,data = data,variable = variable,formula = formula)
+          stat2result <- wf_p(id = id,data = data,variable = variable,formula = formula)
         }
       }else{
         cat(paste0("Sample size: ",truesap_size,"\n"))
         cat(" wilcoxon test\n")
-        stat2result[["stat"]] <<- wf_p(id = id,data = data,variable = variable,formula = formula)
+        stat2result <- wf_p(id = id,data = data,variable = variable,formula = formula)
       }
     }
   }else{
     cat("Non-normally distributed  \n")
     cat(" wilcoxon test\n")
-    stat2result[["stat"]] <<- wf_p(id = id,data = data,variable = variable,formula = formula)
+    stat2result <- wf_p(id = id,data = data,variable = variable,formula = formula)
   }
+  max_value <- max(as.numeric(data[,value]))
+  p_position <- stat2result[,1:2] %>%
+    mutate(y.position = ifelse(max_value >0,max_value*1.12,
+                               ifelse (abs(max_value) >= 1,1.12,
+                                       abs(max_value)*1.12 )))
+  statresult <- new("statresult",stat=as.data.frame(stat2result),
+                    normal = as.data.frame(nordata_save),
+                    p_position = as.data.frame(p_position))
 
-  stat2result[["normal"]] <<- nordata_save
-  return(stat2result[["stat"]])
+  cat(paste0("p = ",stat2result$p))
+  return(statresult)
 }

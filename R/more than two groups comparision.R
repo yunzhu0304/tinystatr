@@ -1,24 +1,39 @@
-#' @title Perform Statistical Test for More Than Two-group Comparison
-#' @description
-#'     Depending on the characteristics of the data, it automatically determines
-#'     whether to use parametric tests (Anova, HSD(post-hoc)) or non-parametric
-#'     tests (kruskal, Dunn's(post-hoc)).
+#'  @title Perform Statistical Analysis with Post-hoc Tests and Visualization Positions
 #'
-#' @param data A data frame containing the variables of interest.
-#' @param variable A character string specifying the name of the variable in \code{data} for which the test will be conducted. Ignore if not available.
-#' @param id The identifier for each observation.A value to filter the \code{variable} by. Ignore if not available.
-#' @param group The grouping variable for comparing groups.
-#' @param value The variable representing the values to be analyzed.
-#' @param formula A formula specifying the relationship between variables.An optional formula specifying the structure of the statistical model to be tested.
-#' @param ... Additional arguments to be passed to the statistical tests.
+#'  @description This function conducts statistical tests (ANOVA or Kruskal-Wallis) to compare group means,
+#' performs post-hoc tests when necessary, and provides positions for p-value visualization.
+#' The results are returned as an S4 object containing statistical outcomes, normality tests,
+#' and recommended p-value positions for plotting.
 #'
-#' @return A data frame containing the results of the statistical test.
-#' @importFrom dplyr mutate select filter bind_rows
-#' @importFrom stats shapiro.test bartlett.test
-#' @importFrom rstatix add_significance
+#' @param data A data frame containing the dataset to be analyzed.
+#' @param group A character string specifying the grouping variable (e.g., treatment groups).
+#' @param value A character string specifying the response variable to be tested.
+#' @param formula A formula object specifying the statistical model (e.g., `value ~ group`).
+#' @param variable A logical value indicating whether the dataset contains a 'variable' column.
+#'   If `FALSE`, a default "id" variable will be added. Default is `FALSE`.
+#' @param id A character string specifying the identifier for a particular variable to be analyzed.
+#'   Default is `"id"`.
+#' @param ... Additional arguments passed to internal functions.
 #'
-#' @export
+#' @return An S4 object of class `statresult` with the following slots:
+#' \item{stat}{A data frame containing pairwise comparisons with adjusted p-values and test methods.}
+#' \item{normal}{A data frame summarizing normality test results, mean values, and standard deviations.}
+#' \item{p_position}{A data frame providing recommended y-axis positions for p-value annotations in plots.}
 #'
+#' @details
+#' The function performs the following steps:
+#' 1. Checks if there are at least three samples per group; groups with fewer samples are excluded.
+#' 2. Evaluates normality using the Shapiro-Wilk test for each group.
+#' 3. If data are normally distributed, Bartlett's test for homogeneity of variance is conducted.
+#' 4. Depending on variance test results, an ANOVA or Kruskal-Wallis test is performed.
+#' 5. Post-hoc tests (Tukey HSD for ANOVA or Dunn's test for Kruskal-Wallis) are applied when p < 0.05.
+#' 6. Calculates appropriate positions for visualizing p-values on plots.
+#'
+#' @importFrom dplyr mutate filter select ungroup count group_by
+#' @importFrom rstatix shapiro_test kruskal_test dunn_test add_significance
+#' @importFrom DescTools PostHocTest
+#' @importFrom stats aov bartlett.test
+#' @importFrom methods setClass new
 #' @examples
 #' \donttest{
 #' # Load data
@@ -26,16 +41,20 @@
 #' data("ToothGrowth")
 #'
 #' df <- ToothGrowth
-#' stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
+#' result <- stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
 #'
 #' #:::::::::::::::::::::::::::::::::::::::
 #' # Dataframe with only two columns (group,value)
 #' data("HairEyeColor")
 #' df <- as.data.frame(HairEyeColor)[,c(2,4)]
 #'
-#' stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
+#' result <- stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
 #' }
 #'
+#' result@stat # View statistical results
+#' result@normal # View normality test results
+#' result@p_position # View p-value positions for plotting
+#' @export
 stat3 <- function(data,
                   group,
                   value,

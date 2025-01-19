@@ -15,7 +15,7 @@
 #'
 #' @return A data frame containing the adjusted p-values and additional information for each comparison.
 #'
-#' @seealso \code{\link[DescTools]{PostHocTest}} for more information on post-hoc tests.
+#' @see \code{\link[DescTools]{PostHocTest}} for more information on post-hoc tests.
 #'
 #' @importFrom dplyr mutate
 #' @importFrom DescTools PostHocTest
@@ -34,7 +34,7 @@
 #'
 hsd_p <- function(data, group, variable, id,formula,method = "hsd",...){
   data[[group]] <- as.character(data[[group]])
-  tpd <- as.matrix(PostHocTest(anof(data, variable, id,formula), method = method)[[group]][,4]) %>%
+  tpd <- as.matrix(DescTools::PostHocTest(anof(data, variable, id,formula), method = method)[[group]][,4]) %>%
     `colnames<-`("p.adj") %>%
     as.data.frame() %>%
     rownames_to_column(var = "groups")%>%
