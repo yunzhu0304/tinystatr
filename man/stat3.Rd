@@ -2,7 +2,7 @@
 % Please edit documentation in R/more than two groups comparision.R
 \name{stat3}
 \alias{stat3}
-\title{@title Perform Statistical Analysis with Post-hoc Tests and Visualization Positions}
+\title{Perform Statistical Analysis with Post-hoc Tests and Visualization Positions}
 \usage{
 stat3(data, group, value, formula, variable = FALSE, id = "id", ...)
 }
@@ -30,7 +30,7 @@ An S4 object of class \code{statresult} with the following slots:
 \item{p_position}{A data frame providing recommended y-axis positions for p-value annotations in plots.}
 }
 \description{
-@description This function conducts statistical tests (ANOVA or Kruskal-Wallis) to compare group means,
+This function conducts statistical tests (ANOVA or Kruskal-Wallis) to compare group means,
 performs post-hoc tests when necessary, and provides positions for p-value visualization.
 The results are returned as an S4 object containing statistical outcomes, normality tests,
 and recommended p-value positions for plotting.

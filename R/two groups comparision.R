@@ -30,7 +30,8 @@
 #' df <- ToothGrowth %>%
 #' filter(dose %in% c("0.5", "1"))
 #'
-#' result <- stat2(data = df, variable = "supp", id = "VC", group = "dose", value = "len",
+#' result <- stat2(data = df, variable = "supp",
+#' id = "VC", group = "dose", value = "len",
 #' formula = len ~ dose)
 #'
 #' # Inspect results
@@ -55,9 +56,6 @@ stat2 <- function(data,
   vari  <- sym(variable)
   gro <- sym(group)
   valu  <- sym(value)
-
-  setClass("statresult",slots=list(stat="data.frame",normal="data.frame",
-                                   p_position="data.frame"))
 
   nordis_data <- data.frame(group = character(),
                             variable = character(),

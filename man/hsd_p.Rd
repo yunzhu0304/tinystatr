@@ -40,3 +40,6 @@ hsd_p(data = df, group = "dose", variable = "supp", id = "VC", formula = len ~ d
 }
 
 }
+\seealso{
+\code{\link[DescTools]{PostHocTest}} for more information on post-hoc tests.
+}

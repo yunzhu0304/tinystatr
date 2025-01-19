@@ -15,7 +15,7 @@
 #'
 #' @return A data frame containing the adjusted p-values and additional information for each comparison.
 #'
-#' @see \code{\link[DescTools]{PostHocTest}} for more information on post-hoc tests.
+#' @seealso  \code{\link[DescTools]{PostHocTest}} for more information on post-hoc tests.
 #'
 #' @importFrom dplyr mutate
 #' @importFrom DescTools PostHocTest

@@ -1,6 +1,6 @@
-#'  @title Perform Statistical Analysis with Post-hoc Tests and Visualization Positions
+#' Perform Statistical Analysis with Post-hoc Tests and Visualization Positions
 #'
-#'  @description This function conducts statistical tests (ANOVA or Kruskal-Wallis) to compare group means,
+#' This function conducts statistical tests (ANOVA or Kruskal-Wallis) to compare group means,
 #' performs post-hoc tests when necessary, and provides positions for p-value visualization.
 #' The results are returned as an S4 object containing statistical outcomes, normality tests,
 #' and recommended p-value positions for plotting.
@@ -71,8 +71,6 @@ stat3 <- function(data,
   gro <- sym(group)
   valu  <- sym(value)
 
-  stat3result <<- list()
-
   nordis_data <- data.frame(group = character(),
                             variable = character(),
                             normal = logical(),
@@ -96,18 +94,20 @@ stat3 <- function(data,
 
   if (length(unique(data[[group]])) < 3) {
     if (length(unique(data[[group]])) == 2) {
-      stat2(data = data,group = group,variable = variable,
-            id = id, value = value, formula = formula)
+      stat2result <- stat2(data = data,group = group,variable = variable,
+                           id = id, value = value, formula = formula)
 
-      stat3result[["stat"]] <<- stat2result[["stat"]] %>%
+      stat3result <- stat2result@stat %>%
         select(group1,group2,p,method,variable) %>%
         mutate(p1 = NA, P1method = NA)%>%
         `colnames<-`(c("group1",  "group2","p.adj", "posthoc","variable","p1", "P1method"))%>%
         add_significance("p.adj")
 
-      stat3result[["normal"]] <<- stat2result[["normal"]]
+      statresult <- new("statresult",stat=as.data.frame(stat3result),
+                        normal = stat2result@normal,
+                        p_position = stat2result@p_position)
 
-      return(stat3result[["stat"]])
+      return(statresult)
     }else{
       warning("Unable to perform statistics as there are fewer than 2 groups.")
     }
@@ -149,29 +149,55 @@ stat3 <- function(data,
       if (Vtest) {
         cat("Variance equal  \n")
         cat(" Anova\n")
-        stat3result[["stat"]] <<- hsd_p(data = data, group = group,
-                                        variable = variable, id = id,
-                                        formula = formula) %>%
+        stat3result <- hsd_p(data = data, group = group,
+                             variable = variable, id = id,
+                             formula = formula) %>%
           add_significance("p.adj")
       }else{
         cat("Variance unequal  \n")
         cat("Kruskal-Wallis \n")
-        stat3result[["stat"]] <<-dunn_p(data = data, group = group,
-                                        variable = variable, id = id,
-                                        formula = formula) %>%
+        stat3result <-dunn_p(data = data, group = group,
+                             variable = variable, id = id,
+                             formula = formula) %>%
           add_significance("p.adj")
       }
     }else{
       cat("Non-normally distributed  \n")
       cat("Variance unequal  \n")
       cat("Kruskal-Wallis \n")
-      stat3result[["stat"]] <<-dunn_p(data = data, group = group,
-                                      variable = variable, id = id,
-                                      formula = formula)%>%
+      stat3result <-dunn_p(data = data, group = group,
+                           variable = variable, id = id,
+                           formula = formula)%>%
         add_significance("p.adj")
     }
 
-    stat3result[["normal"]] <<- nordata_save
-    return(stat3result[["stat"]])
+    max_value <- max(as.numeric(data[,value]))
+    p_position <- stat3result[,1:2]
+    p_position$y.position <- NA
+    if (max_value >0) {
+      p_position$y.position[1] <-max_value*1.12
+      for (i in 2:nrow(p_position)) {
+        p_position$y.position[i] <- p_position$y.position[i-1]*1.08
+      }
+    }else{
+      if (abs(max_value) >= 1) {
+        p_position$y.position[1] <- 1.12
+        for (i in 2:nrow(p_position)) {
+          p_position$y.position[i] <- p_position$y.position[i-1]*1.08
+        }
+      }else{
+        p_position$y.position[1] <- abs(max_value)*1.12
+        for (i in 2:nrow(p_position)) {
+          p_position$y.position[i] <- p_position$y.position[i-1]*1.08
+        }
+      }
+    }
+
+    statresult <- new("statresult",stat=as.data.frame(stat3result),
+                      normal = as.data.frame(nordata_save),
+                      p_position = as.data.frame(p_position))
+
+    return(statresult)
   }
 }
+

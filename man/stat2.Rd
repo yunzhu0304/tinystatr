@@ -50,7 +50,8 @@ data("ToothGrowth")
 df <- ToothGrowth \%>\%
 filter(dose \%in\% c("0.5", "1"))
 
-result <- stat2(data = df, variable = "supp", id = "VC", group = "dose", value = "len",
+result <- stat2(data = df, variable = "supp",
+id = "VC", group = "dose", value = "len",
 formula = len ~ dose)
 
 # Inspect results
