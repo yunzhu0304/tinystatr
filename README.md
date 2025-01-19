@@ -76,7 +76,7 @@ After executing the function(*stat2()*), the results will include assessments of
 
 ```r
 # Dataframe with multiple columns, need to filter variable
-> stat2(data = df,variable = "supp",id="VC",group = "dose",value = "len",
+> result <- stat2(data = df,variable = "supp",id="VC",group = "dose",value = "len",
 formula = len ~ dose)
 
 Normally distributed  
@@ -88,10 +88,13 @@ Variance equal
 1 0.5    1         10    10 0.000000681 VC       t test
 ```
 
-We also obtain a list named *stat2result*, which contains two data frames. One is stat, used to store the statistical result. The other is narmal, used to store the results of normality, mean and sd value.
+We also obtain an S4 object of class statresult, which includes:
+# stat: A data frame containing the statistical test results.
+# normal: A data frame with normality test results for each group.
+# p_position: A data frame indicating the position of p-values for visualization purposes.
 
 ```r
-> stat2result[["stat"]]
+> result@stat
 # A tibble: 1 × 7
   group1 group2    n1    n2           p variable method
   <chr>  <chr>  <int> <int>       <dbl> <chr>    <chr> 
