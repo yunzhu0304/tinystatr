@@ -1,4 +1,5 @@
-# Tinystatr, an automated process of selecting statistical methods
+# Tinystatr, an automated process of selecting statistical methods <a href="https://maze-icicle-277.notion.site/Tinystatr-an-automated-process-of-selecting-statistical-methods-fcae55ded6f34e9f99cd25c661851f44"><img src="man/figure/logo.svg" align="right" height="139" alt="tinystatr website" /></a>
+
 
 [https://github.com/yunzhu0304/tinystatr](https://github.com/yunzhu0304/tinystatr)
 
