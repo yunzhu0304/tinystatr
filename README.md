@@ -227,7 +227,7 @@ After executing the function(*stat3()*), we will obtain the statistical result a
 
 ```r
 > result <- stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
->>>>>>> origin/main
+
 All groups have 3 or more samples. 
 Normally distributed  
 Variance equal  
@@ -236,7 +236,7 @@ Variance equal
 =======
 
 > result@stat
->>>>>>> origin/main
+
   group2 group1        p.adj posthoc variable           p1 P1method p.adj.signif
 1      1    0.5 1.584138e-05     hsd       OJ 8.887164e-08    ANOVA         ****
 2      2    0.5 9.386773e-08     hsd       OJ 8.887164e-08    ANOVA         ****
@@ -345,3 +345,5 @@ Kruskal-Wallis
 1. **[Comparing Means in R](http://www.sthda.com/english/wiki/comparing-means-in-r)**
 2. **[Learning Statistics with R](https://learningstatisticswithr.com/)**
 3. **[HOW CAN I DO POST-HOC PAIRWISE COMPARISONS IN R? | R FAQ](https://stats.oarc.ucla.edu/r/faq/how-can-i-do-post-hoc-pairwise-comparisons-in-r/)**
+
+
