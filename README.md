@@ -184,7 +184,7 @@ p = 0.88
   group1 group2 y.position
 1   Male Female      73.92
 
->>>>>>> origin/main
+
 ```
 
 ## 📊Statistical analysis for more than **two groups(*stat3()*)**
@@ -216,7 +216,7 @@ df <- ToothGrowth
 ...
 ```
 
-<<<<<<< HEAD
+
 After executing the function(*stat3()*), we will obtain the statistical result and a list named *stat3result*.
 
 ```r
@@ -242,7 +242,7 @@ Variance equal
 2      2    0.5 9.386773e-08     hsd       OJ 8.887164e-08    ANOVA         ****
 3      2      1 1.309258e-01     hsd       OJ 8.887164e-08    ANOVA           ns
 
-<<<<<<< HEAD
+
 > stat3result[["stat"]]
   group2 group1        p.adj posthoc variable           p1 P1method p.adj.signif
 1      1    0.5 1.584138e-05     hsd       OJ 8.887164e-08    ANOVA         ****
@@ -258,7 +258,7 @@ Variance equal
 3   2.0       OJ   TRUE     26.06 2.655058
 
 > result@normal
->>>>>>> origin/main
+
   group variable normal meanvalue       sd
 1   0.5       OJ   TRUE     13.23 4.459709
 2   1.0       OJ   TRUE     22.70 3.910953
@@ -274,7 +274,7 @@ If the datasets only contain information on groups and values, we will ignore th
 data("HairEyeColor")
 df <- as.data.frame(HairEyeColor)[,c(2,4)]
 
-<<<<<<< HEAD
+
 > stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
 
 All groups have 3 or more samples. 
@@ -320,13 +320,13 @@ Kruskal-Wallis
 6  Hazel  Green 1.0000000 bonferroni       id 0.0637      K_W           ns
 
 > result@normal
->>>>>>> origin/main
+
   group variable normal meanvalue        sd
 1 Brown       id   TRUE    27.500 23.348295
 2  Blue       id   TRUE    26.875 21.463840
 3 Hazel       id  FALSE    11.625  9.694439
 4 Green       id   TRUE     8.000  4.598136
-<<<<<<< HEAD
+
 =======
 
 > result@p_position
@@ -337,17 +337,13 @@ Kruskal-Wallis
 4   Blue  Hazel   93.11791
 5   Blue  Green  100.56734
 6  Hazel  Green  108.61273
->>>>>>> origin/main
+
 ```
 
 # 📖References
 
-<<<<<<< HEAD
 1. **[Comparing Means in R](http://www.sthda.com/english/wiki/comparing-means-in-r)**
 2. **[Learning Statistics with R](https://learningstatisticswithr.com/)**
 3. **[HOW CAN I DO POST-HOC PAIRWISE COMPARISONS IN R? | R FAQ](https://stats.oarc.ucla.edu/r/faq/how-can-i-do-post-hoc-pairwise-comparisons-in-r/)**
-=======
-1. [**Comparing Means in R**](http://www.sthda.com/english/wiki/comparing-means-in-r)
-2. [**Learning Statistics with R**](https://learningstatisticswithr.com/)
-3. [**HOW CAN I DO POST-HOC PAIRWISE COMPARISONS IN R? | R FAQ**]
+
 >>>>>>> origin/main
