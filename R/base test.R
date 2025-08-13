@@ -144,8 +144,72 @@ wf <- function(data,
                variable,
                id,
                formula,
+<<<<<<< HEAD
+               var.equal = FALSE,
+               ...) {
+
+  df <- data %>%
+    dplyr::filter(.data[[variable]] == id)
+
+  vars <- all.vars(formula)
+  resp <- vars[1]
+  grp  <- vars[2]
+
+  df <- df %>%
+    dplyr::filter(!is.na(.data[[resp]]), !is.na(.data[[grp]]))
+
+
+  glevels <- levels(factor(df[[grp]]))
+  n1 <- sum(df[[grp]] == glevels[1], na.rm = TRUE)
+  n2 <- sum(df[[grp]] == glevels[2], na.rm = TRUE)
+
+
+  dots <- list(...)
+  res <- do.call(stats::wilcox.test,
+                 c(list(formula = formula, data = df), dots))
+
+
+  tibble::tibble(
+    group1 = as.character(glevels[1]),
+    group2 = as.character(glevels[2]),
+    n1     = n1,
+    n2     = n2,
+    p      = format_p(unname(res$p.value), digits = 4) %>% as.numeric()
+
+  )
+}
+
+#' Format P-values for display
+#'
+#' This function formats numeric p-values for reporting.
+#' Values smaller than `small_thresh` are displayed in scientific notation
+#' with 2 significant digits. Other values are rounded to four decimal places.
+#'
+#' @param p A numeric p-value.
+#' @param small_thresh Threshold below which the p-value will be displayed
+#' in scientific notation. Defaults to `1e-4`.
+#'
+#' @return A character string representing the formatted p-value.
+#' @examples
+#' format_p(0.123456)
+#' format_p(0.0000002)
+#' format_p(NA)
+#' @export
+format_p <- function(p, small_thresh = 1e-4, digits = 4) {
+  if (is.na(p)) return(NA_character_)
+  if (p < small_thresh) {
+    # 科学计数法
+    formatC(p, format = "e", digits = digits - 1)
+  } else {
+    # 固定小数位
+    sprintf(paste0("%.", digits, "f"), round(p, digits))
+  }
+}
+
+=======
                var.equal = FALSE,...) {
   data %>%
     filter(.data[[variable]] == id) %>%
     wilcox_test(formula,...)
 }
+>>>>>>> origin/main

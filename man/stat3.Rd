@@ -48,6 +48,24 @@ The function performs the following steps:
 }
 \examples{
 \donttest{
+<<<<<<< HEAD
+data("ToothGrowth")
+df <- ToothGrowth
+result <- stat3(data = df, group = "dose", value = "len",
+                variable = "supp", id = "OJ", formula = len ~ dose)
+result@stat
+result@normal
+result@p_position
+
+data("HairEyeColor")
+df <- as.data.frame(HairEyeColor)[, c(2, 4)]
+result <- stat3(data = df, group = "Eye", value = "Freq",
+                formula = Freq ~ Eye)
+result@stat
+result@normal
+result@p_position
+}
+=======
 # Load data
 # Dataframe with multiple columns, need to filter variable
 data("ToothGrowth")
@@ -66,4 +84,5 @@ result <- stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # 
 result@stat # View statistical results
 result@normal # View normality test results
 result@p_position # View p-value positions for plotting
+>>>>>>> origin/main
 }

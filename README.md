@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+# Tinystatr, an automated process of selecting statistical methods <a href="https://maze-icicle-277.notion.site/Tinystatr-an-automated-process-of-selecting-statistical-methods-fcae55ded6f34e9f99cd25c661851f44"><img src="man/figure/logo.svg" align="right" height="139" alt="tinystatr website" /></a>
+=======
 # Tinystatr, an automated process of selecting statistical methods <a href="https://maze-icicle-277.notion.site/Tinystatr-an-automated-process-of-selecting-statistical-methods-fcae55ded6f34e9f99cd25c661851f44"><img src="man/figure/logo.png" align="right" height="139" alt="tinystatr website" /></a>
+>>>>>>> origin/main
 
 
 [https://github.com/yunzhu0304/tinystatr](https://github.com/yunzhu0304/tinystatr)
@@ -82,6 +86,30 @@ formula = len ~ dose)
 Normally distributed  
 Variance equal  
  t-test
+<<<<<<< HEAD
+# A tibble: 1 × 7
+  group1 group2    n1    n2           p variable method
+  <chr>  <chr>  <int> <int>       <dbl> <chr>    <chr> 
+1 0.5    1         10    10 0.000000681 VC       t test
+```
+
+We also obtain an S4 object of class statresult, which includes:
+# stat: A data frame containing the statistical test results.
+# normal: A data frame with normality test results for each group.
+# p_position: A data frame indicating the position of p-values for visualization purposes.
+
+```r
+> result@stat
+# A tibble: 1 × 7
+  group1 group2    n1    n2           p variable method
+  <chr>  <chr>  <int> <int>       <dbl> <chr>    <chr> 
+1 0.5    1         10    10 0.000000681 VC       t test
+
+> stat2result[["normal"]]
+  group variable normal meanvalue       sd
+1   0.5       VC   TRUE      7.98 2.746634
+2   1.0       VC   TRUE     16.77 2.515309
+=======
 p = 6.81e-07
 ```
 
@@ -106,6 +134,7 @@ We also obtain an S4 object of class statresult, which includes:
 > result@p_position
   group1 group2 y.position
 1    0.5      1     30.576
+>>>>>>> origin/main
 ```
 
 ### 📌Statistical analysis based solely on grouping and value data
@@ -117,6 +146,27 @@ If the datasets only contain information on groups and values, we will ignore th
 data("HairEyeColor")
 df <- as.data.frame(HairEyeColor)[,c(3,4)]
 
+<<<<<<< HEAD
+> stat2(data = df,group = "Sex",value = "Freq", formula = Freq ~ Sex) # Ignoring variable and id
+
+Non-normally distributed  
+ wilcoxon test
+# A tibble: 1 × 7
+  group1 group2    n1    n2     p variable method       
+  <chr>  <chr>  <int> <int> <dbl> <chr>    <chr>        
+1 Male   Female    16    16  0.88 id       Wilcoxon test
+
+> stat2result[["stat"]]
+# A tibble: 1 × 7
+  group1 group2    n1    n2     p variable method       
+  <chr>  <chr>  <int> <int> <dbl> <chr>    <chr>        
+1 Male   Female    16    16  0.88 id       Wilcoxon test
+
+> stat2result[["normal"]]
+   group variable normal meanvalue       sd
+1   Male       id  FALSE   17.4375 16.00820
+2 Female       id  FALSE   19.5625 20.71382
+=======
 > result <- stat2(data = df,group = "Sex",value = "Freq", formula = Freq ~ Sex) # Ignoring variable and id
 
 Non-normally distributed  
@@ -136,6 +186,7 @@ p = 0.88
   group1 group2 y.position
 1   Male Female      73.92
 
+>>>>>>> origin/main
 ```
 
 ## 📊Statistical analysis for more than **two groups(*stat3()*)**
@@ -167,21 +218,41 @@ df <- ToothGrowth
 ...
 ```
 
+<<<<<<< HEAD
+After executing the function(*stat3()*), we will obtain the statistical result and a list named *stat3result*.
+
+```r
+> stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
+
+=======
 After executing the function(*stat3()*), we will obtain the statistical result and an S4 object.
 
 ```r
 > result <- stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
+>>>>>>> origin/main
 All groups have 3 or more samples. 
 Normally distributed  
 Variance equal  
  Anova
+<<<<<<< HEAD
+=======
 
 > result@stat
+>>>>>>> origin/main
   group2 group1        p.adj posthoc variable           p1 P1method p.adj.signif
 1      1    0.5 1.584138e-05     hsd       OJ 8.887164e-08    ANOVA         ****
 2      2    0.5 9.386773e-08     hsd       OJ 8.887164e-08    ANOVA         ****
 3      2      1 1.309258e-01     hsd       OJ 8.887164e-08    ANOVA           ns
 
+<<<<<<< HEAD
+> stat3result[["stat"]]
+  group2 group1        p.adj posthoc variable           p1 P1method p.adj.signif
+1      1    0.5 1.584138e-05     hsd       OJ 8.887164e-08    ANOVA         ****
+2      2    0.5 9.386773e-08     hsd       OJ 8.887164e-08    ANOVA         ****
+3      2      1 1.309258e-01     hsd       OJ 8.887164e-08    ANOVA           ns
+
+> stat3result[["normal"]]
+=======
 > result@normal
   group variable normal meanvalue       sd
 1   0.5       OJ   TRUE     13.23 4.459709
@@ -189,6 +260,7 @@ Variance equal
 3   2.0       OJ   TRUE     26.06 2.655058
 
 > result@normal
+>>>>>>> origin/main
   group variable normal meanvalue       sd
 1   0.5       OJ   TRUE     13.23 4.459709
 2   1.0       OJ   TRUE     22.70 3.910953
@@ -204,6 +276,36 @@ If the datasets only contain information on groups and values, we will ignore th
 data("HairEyeColor")
 df <- as.data.frame(HairEyeColor)[,c(2,4)]
 
+<<<<<<< HEAD
+> stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
+
+All groups have 3 or more samples. 
+Non-normally distributed  
+Variance unequal  
+Kruskal-Wallis 
+# A tibble: 6 × 8
+  group1 group2 p.adj posthoc    variable     p1 P1method p.adj.signif
+  <chr>  <chr>  <dbl> <chr>      <chr>     <dbl> <chr>    <chr>       
+1 Brown  Blue   1     bonferroni id       0.0637 K_W      ns          
+2 Brown  Hazel  0.671 bonferroni id       0.0637 K_W      ns          
+3 Brown  Green  0.368 bonferroni id       0.0637 K_W      ns          
+4 Blue   Hazel  0.347 bonferroni id       0.0637 K_W      ns          
+5 Blue   Green  0.176 bonferroni id       0.0637 K_W      ns          
+6 Hazel  Green  1     bonferroni id       0.0637 K_W      ns  
+
+> stat3result[["stat"]]
+# A tibble: 6 × 8
+  group1 group2 p.adj posthoc    variable     p1 P1method p.adj.signif
+  <chr>  <chr>  <dbl> <chr>      <chr>     <dbl> <chr>    <chr>       
+1 Brown  Blue   1     bonferroni id       0.0637 K_W      ns          
+2 Brown  Hazel  0.671 bonferroni id       0.0637 K_W      ns          
+3 Brown  Green  0.368 bonferroni id       0.0637 K_W      ns          
+4 Blue   Hazel  0.347 bonferroni id       0.0637 K_W      ns          
+5 Blue   Green  0.176 bonferroni id       0.0637 K_W      ns          
+6 Hazel  Green  1     bonferroni id       0.0637 K_W      ns      
+    
+> stat3result[["normal"]]
+=======
 >  result <-  stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
 All groups have 3 or more samples. 
 Non-normally distributed  
@@ -220,11 +322,14 @@ Kruskal-Wallis
 6  Hazel  Green 1.0000000 bonferroni       id 0.0637      K_W           ns
 
 > result@normal
+>>>>>>> origin/main
   group variable normal meanvalue        sd
 1 Brown       id   TRUE    27.500 23.348295
 2  Blue       id   TRUE    26.875 21.463840
 3 Hazel       id  FALSE    11.625  9.694439
 4 Green       id   TRUE     8.000  4.598136
+<<<<<<< HEAD
+=======
 
 > result@p_position
   group1 group2 y.position
@@ -234,10 +339,17 @@ Kruskal-Wallis
 4   Blue  Hazel   93.11791
 5   Blue  Green  100.56734
 6  Hazel  Green  108.61273
+>>>>>>> origin/main
 ```
 
 # 📖References
 
+<<<<<<< HEAD
+1. **[Comparing Means in R](http://www.sthda.com/english/wiki/comparing-means-in-r)**
+2. **[Learning Statistics with R](https://learningstatisticswithr.com/)**
+3. **[HOW CAN I DO POST-HOC PAIRWISE COMPARISONS IN R? | R FAQ](https://stats.oarc.ucla.edu/r/faq/how-can-i-do-post-hoc-pairwise-comparisons-in-r/)**
+=======
 1. [**Comparing Means in R**](http://www.sthda.com/english/wiki/comparing-means-in-r)
 2. [**Learning Statistics with R**](https://learningstatisticswithr.com/)
 3. [**HOW CAN I DO POST-HOC PAIRWISE COMPARISONS IN R? | R FAQ**]
+>>>>>>> origin/main
