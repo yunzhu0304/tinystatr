@@ -84,7 +84,7 @@ formula = len ~ dose)
 Normally distributed  
 Variance equal  
  t-test
-<<<<<<< HEAD
+
 # A tibble: 1 × 7
   group1 group2    n1    n2           p variable method
   <chr>  <chr>  <int> <int>       <dbl> <chr>    <chr> 
@@ -132,7 +132,7 @@ We also obtain an S4 object of class statresult, which includes:
 > result@p_position
   group1 group2 y.position
 1    0.5      1     30.576
->>>>>>> origin/main
+
 ```
 
 ### 📌Statistical analysis based solely on grouping and value data
@@ -144,7 +144,7 @@ If the datasets only contain information on groups and values, we will ignore th
 data("HairEyeColor")
 df <- as.data.frame(HairEyeColor)[,c(3,4)]
 
-<<<<<<< HEAD
+
 > stat2(data = df,group = "Sex",value = "Freq", formula = Freq ~ Sex) # Ignoring variable and id
 
 Non-normally distributed  
@@ -232,7 +232,7 @@ All groups have 3 or more samples.
 Normally distributed  
 Variance equal  
  Anova
-<<<<<<< HEAD
+
 =======
 
 > result@stat
@@ -345,5 +345,3 @@ Kruskal-Wallis
 1. **[Comparing Means in R](http://www.sthda.com/english/wiki/comparing-means-in-r)**
 2. **[Learning Statistics with R](https://learningstatisticswithr.com/)**
 3. **[HOW CAN I DO POST-HOC PAIRWISE COMPARISONS IN R? | R FAQ](https://stats.oarc.ucla.edu/r/faq/how-can-i-do-post-hoc-pairwise-comparisons-in-r/)**
-
->>>>>>> origin/main
