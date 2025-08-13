@@ -1,10 +1,8 @@
 Package: tinystatr
 Title: Automatically select statistical methods and return results
-<<<<<<< HEAD
+
 Version: 0.0.0.9010
-=======
-Version: 0.0.0.9005
->>>>>>> origin/main
+
 Authors@R: 
     person(given = "Yun",
     family = "Zhu",
@@ -18,11 +16,11 @@ License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-<<<<<<< HEAD
+
 RoxygenNote: 7.3.2
-=======
+
 RoxygenNote: 7.2.3
->>>>>>> origin/main
+
 Depends: 
     dplyr
 Imports: 
@@ -31,8 +29,5 @@ Imports:
     rstatix,
     stats,
     tibble,
-<<<<<<< HEAD
     rlang,
-=======
->>>>>>> origin/main
     tidyr
