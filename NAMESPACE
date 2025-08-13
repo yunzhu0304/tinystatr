@@ -2,7 +2,10 @@
 
 export(anof)
 export(dunn_p)
+<<<<<<< HEAD
 export(format_p)
+=======
+>>>>>>> origin/main
 export(hsd_p)
 export(kwf)
 export(stat2)

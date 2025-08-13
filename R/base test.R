@@ -144,6 +144,7 @@ wf <- function(data,
                variable,
                id,
                formula,
+<<<<<<< HEAD
                var.equal = FALSE,
                ...) {
 
@@ -205,3 +206,10 @@ format_p <- function(p, small_thresh = 1e-4, digits = 4) {
   }
 }
 
+=======
+               var.equal = FALSE,...) {
+  data %>%
+    filter(.data[[variable]] == id) %>%
+    wilcox_test(formula,...)
+}
+>>>>>>> origin/main
