@@ -36,7 +36,6 @@
 #' @importFrom methods setClass new
 #' @examples
 #' \donttest{
-<<<<<<< HEAD
 #' data("ToothGrowth")
 #' df <- ToothGrowth
 #' result <- stat3(data = df, group = "dose", value = "len",
@@ -53,26 +52,6 @@
 #' result@normal
 #' result@p_position
 #' }
-=======
-#' # Load data
-#' # Dataframe with multiple columns, need to filter variable
-#' data("ToothGrowth")
-#'
-#' df <- ToothGrowth
-#' result <- stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
-#'
-#' #:::::::::::::::::::::::::::::::::::::::
-#' # Dataframe with only two columns (group,value)
-#' data("HairEyeColor")
-#' df <- as.data.frame(HairEyeColor)[,c(2,4)]
-#'
-#' result <- stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
-#' }
-#'
-#' result@stat # View statistical results
-#' result@normal # View normality test results
-#' result@p_position # View p-value positions for plotting
->>>>>>> origin/main
 #' @export
 stat3 <- function(data,
                   group,
