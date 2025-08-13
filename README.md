@@ -107,7 +107,7 @@ We also obtain an S4 object of class statresult, which includes:
   group variable normal meanvalue       sd
 1   0.5       VC   TRUE      7.98 2.746634
 2   1.0       VC   TRUE     16.77 2.515309
-=======
+
 p = 6.81e-07
 ```
 
@@ -164,7 +164,7 @@ Non-normally distributed
    group variable normal meanvalue       sd
 1   Male       id  FALSE   17.4375 16.00820
 2 Female       id  FALSE   19.5625 20.71382
-=======
+
 > result <- stat2(data = df,group = "Sex",value = "Freq", formula = Freq ~ Sex) # Ignoring variable and id
 
 Non-normally distributed  
@@ -222,7 +222,7 @@ After executing the function(*stat3()*), we will obtain the statistical result a
 ```r
 > stat3(data = df, group = "dose", value = "len", variable = "supp", id = "OJ", formula = len ~ dose)
 
-=======
+
 After executing the function(*stat3()*), we will obtain the statistical result and an S4 object.
 
 ```r
@@ -233,7 +233,7 @@ Normally distributed
 Variance equal  
  Anova
 
-=======
+
 
 > result@stat
 
@@ -250,7 +250,7 @@ Variance equal
 3      2      1 1.309258e-01     hsd       OJ 8.887164e-08    ANOVA           ns
 
 > stat3result[["normal"]]
-=======
+
 > result@normal
   group variable normal meanvalue       sd
 1   0.5       OJ   TRUE     13.23 4.459709
@@ -303,7 +303,7 @@ Kruskal-Wallis
 6 Hazel  Green  1     bonferroni id       0.0637 K_W      ns      
     
 > stat3result[["normal"]]
-=======
+
 >  result <-  stat3(data = df,group = "Eye",value = "Freq", formula = Freq ~ Eye) # Ignoring variable and id
 All groups have 3 or more samples. 
 Non-normally distributed  
@@ -327,7 +327,7 @@ Kruskal-Wallis
 3 Hazel       id  FALSE    11.625  9.694439
 4 Green       id   TRUE     8.000  4.598136
 
-=======
+
 
 > result@p_position
   group1 group2 y.position
