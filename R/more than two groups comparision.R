@@ -57,6 +57,7 @@
 #'
 #' @examples
 #' \donttest{
+#' # Example 1: data frame with multiple columns (filter by variable)
 #' data("ToothGrowth")
 #' df <- ToothGrowth
 #'
