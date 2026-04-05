@@ -7,7 +7,7 @@
 anof(data, variable, id, formula, ...)
 }
 \arguments{
-\item{data}{A data frame containing the dataset.}
+\item{data}{A data object coercible to a data.frame containing the dataset.}
 
 \item{variable}{A character string specifying the variable in the dataset used for filtering.}
 
@@ -21,19 +21,16 @@ anof(data, variable, id, formula, ...)
 An ANOVA object.
 }
 \description{
-This function conducts an analysis of variance (ANOVA) after filtering data based on a specified variable and its corresponding identifier.
+This function conducts an analysis of variance (ANOVA) after filtering data
+based on a specified variable and its corresponding identifier.
 }
 \examples{
 \donttest{
-# Load data
-#:::::::::::::::::::::::::::::::::::::::
 data("ToothGrowth")
-
 df <- ToothGrowth
 anof(data = df, variable = "supp", id = "VC", formula = len ~ dose)
 }
-
 }
 \seealso{
-\code{\link[stats]{aov}} for more advanced t-test functionality.
+\code{\link[stats]{aov}} for more advanced ANOVA functionality.
 }

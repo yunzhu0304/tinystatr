@@ -7,7 +7,7 @@
 hsd_p(data, group, variable, id, formula, method = "hsd", ...)
 }
 \arguments{
-\item{data}{A data frame containing the dataset.}
+\item{data}{A data object coercible to a data.frame containing the dataset.}
 
 \item{group}{A character string specifying the grouping variable in the dataset.}
 
@@ -17,7 +17,7 @@ hsd_p(data, group, variable, id, formula, method = "hsd", ...)
 
 \item{formula}{A formula specifying the model for the analysis of variance.}
 
-\item{method}{one of "hsd", "bonf", "lsd", "scheffe", "newmankeuls", default is "hsd".}
+\item{method}{One of \code{"hsd"}, \code{"bonf"}, \code{"lsd"}, \code{"scheffe"}, \code{"newmankeuls"}. Default is \code{"hsd"}.}
 
 \item{...}{Additional arguments to be passed.}
 }
@@ -32,13 +32,10 @@ based on a specified variable and its corresponding identifier.
 }
 \examples{
 \donttest{
-# Load data
 data("ToothGrowth")
-
 df <- ToothGrowth
 hsd_p(data = df, group = "dose", variable = "supp", id = "VC", formula = len ~ dose)
 }
-
 }
 \seealso{
 \code{\link[DescTools]{PostHocTest}} for more information on post-hoc tests.

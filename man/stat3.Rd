@@ -4,7 +4,16 @@
 \alias{stat3}
 \title{Perform Statistical Analysis with Post-hoc Tests and Visualization Positions}
 \usage{
-stat3(data, group, value, formula, variable = FALSE, id = "id", ...)
+stat3(
+  data,
+  group,
+  value,
+  formula,
+  variable = FALSE,
+  id = "id",
+  parametric = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame containing the dataset to be analyzed.}
@@ -15,19 +24,34 @@ stat3(data, group, value, formula, variable = FALSE, id = "id", ...)
 
 \item{formula}{A formula object specifying the statistical model (e.g., \code{value ~ group}).}
 
-\item{variable}{A logical value indicating whether the dataset contains a 'variable' column.
-If \code{FALSE}, a default "id" variable will be added. Default is \code{FALSE}.}
+\item{variable}{A logical value or character string indicating whether the dataset contains
+a 'variable' column. If \code{FALSE}, a default "id" variable will be added. Default is
+\code{FALSE}.}
 
-\item{id}{A character string specifying the identifier for a particular variable to be analyzed.
-Default is \code{"id"}.}
+\item{id}{A character string specifying the identifier for a particular variable to be
+analyzed. Default is \code{"id"}.}
 
-\item{...}{Additional arguments passed to internal functions.}
+\item{parametric}{This argument allows users to skip the automatic decision procedure.
+Logical or \code{NULL}. Default is \code{NULL}.
+If \code{NULL}, the function automatically selects between parametric and non-parametric
+procedures based on data characteristics.
+If \code{TRUE}, a parametric procedure is forced: for more than two groups, ANOVA followed
+by post-hoc testing; for two groups, the argument is passed to \code{stat2()}.
+If \code{FALSE}, a non-parametric procedure is forced: for more than two groups,
+Kruskal-Wallis followed by Dunn's test; for two groups, the argument is passed to
+\code{stat2()}.}
+
+\item{...}{Additional arguments passed to internal functions (\code{stat2},
+\code{hsd_p}, \code{dunn_p}).}
 }
 \value{
 An S4 object of class \code{statresult} with the following slots:
-\item{stat}{A data frame containing pairwise comparisons with adjusted p-values and test methods.}
-\item{normal}{A data frame summarizing normality test results, mean values, and standard deviations.}
-\item{p_position}{A data frame providing recommended y-axis positions for p-value annotations in plots.}
+\item{stat}{A data frame containing pairwise comparisons with adjusted p-values and test
+methods.}
+\item{normal}{A data frame summarizing normality test results, mean values, and standard
+deviations.}
+\item{p_position}{A data frame providing recommended y-axis positions for p-value
+annotations in plots.}
 }
 \description{
 This function conducts statistical tests (ANOVA or Kruskal-Wallis) to compare group means,
@@ -38,30 +62,74 @@ and recommended p-value positions for plotting.
 \details{
 The function performs the following steps:
 \enumerate{
-\item Checks if there are at least three samples per group; groups with fewer samples are excluded.
+\item Checks if there are at least three samples per group; groups with fewer samples are
+excluded.
 \item Evaluates normality using the Shapiro-Wilk test for each group.
-\item If data are normally distributed, Bartlett's test for homogeneity of variance is conducted.
-\item Depending on variance test results, an ANOVA or Kruskal-Wallis test is performed.
-\item Post-hoc tests (Tukey HSD for ANOVA or Dunn's test for Kruskal-Wallis) are applied when p < 0.05.
-\item Calculates appropriate positions for visualizing p-values on plots.
+\item If data are normally distributed, Bartlett's test for homogeneity of variance is
+conducted.
+\item Depending on variance test results and the \code{parametric} argument, an ANOVA or
+Kruskal-Wallis test is performed.
+\item Post-hoc tests (Tukey HSD for ANOVA or Dunn's test for Kruskal-Wallis)
+are used to generate pairwise comparisons.
+\item Calculates appropriate y-axis positions for visualizing p-values on plots.
 }
 }
 \examples{
 \donttest{
 data("ToothGrowth")
 df <- ToothGrowth
-result <- stat3(data = df, group = "dose", value = "len",
-                variable = "supp", id = "OJ", formula = len ~ dose)
-result@stat
-result@normal
-result@p_position
 
+# Automatic selection
+result_auto <- stat3(
+  data = df,
+  group = "dose",
+  value = "len",
+  variable = "supp",
+  id = "OJ",
+  formula = len ~ dose,
+  parametric = NULL
+)
+result_auto@stat
+result_auto@normal
+result_auto@p_position
+
+# Force parametric procedure
+result_param <- stat3(
+  data = df,
+  group = "dose",
+  value = "len",
+  variable = "supp",
+  id = "OJ",
+  formula = len ~ dose,
+  parametric = TRUE
+)
+result_param@stat
+
+# Force non-parametric procedure
+result_nonparam <- stat3(
+  data = df,
+  group = "dose",
+  value = "len",
+  variable = "supp",
+  id = "OJ",
+  formula = len ~ dose,
+  parametric = FALSE
+)
+result_nonparam@stat
+
+# Example without a variable column
 data("HairEyeColor")
-df <- as.data.frame(HairEyeColor)[, c(2, 4)]
-result <- stat3(data = df, group = "Eye", value = "Freq",
-                formula = Freq ~ Eye)
-result@stat
-result@normal
-result@p_position
+df2 <- as.data.frame(HairEyeColor)[, c(2, 4)]
+
+result2 <- stat3(
+  data = df2,
+  group = "Eye",
+  value = "Freq",
+  formula = Freq ~ Eye,
+  parametric = NULL
+)
+result2@stat
+result2@normal
+result2@p_position
 }
 }

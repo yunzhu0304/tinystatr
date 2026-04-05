@@ -11,12 +11,13 @@ stat2(
   formula,
   variable = FALSE,
   id = "id",
+  parametric = NULL,
   sap.size = 30,
   ...
 )
 }
 \arguments{
-\item{data}{A data frame containing the variables of interest.}
+\item{data}{A data object coercible to a data.frame containing the variables of interest.}
 
 \item{group}{The grouping variable for comparing groups.}
 
@@ -24,11 +25,21 @@ stat2(
 
 \item{formula}{A formula specifying the relationship between variables.}
 
-\item{variable}{A character string specifying the name of the variable in \code{data} for which the test will be conducted. Defaults to FALSE if not available.}
+\item{variable}{A character string specifying the name of the variable in \code{data}
+used for filtering. Defaults to \code{FALSE} if not available.}
 
-\item{id}{The identifier for each observation. Defaults to \code{"id"}.}
+\item{id}{The identifier used to filter observations. Defaults to \code{"id"}.}
 
-\item{sap.size}{The sample size threshold for determining whether to use parametric tests. Default is 30.}
+\item{parametric}{This argument allows users to skip the automatic decision procedure.
+Logical or \code{NULL}. Default is \code{NULL}.
+If \code{NULL}, the function automatically selects the test based on
+normality, variance homogeneity, and sample size.
+If \code{TRUE}, a parametric test is forced:
+t-test for equal variances and Welch's t-test for unequal variances.
+If \code{FALSE}, the Wilcoxon test is forced.}
+
+\item{sap.size}{The sample size threshold for determining whether to use
+parametric tests in the automatic selection procedure. Default is 30.}
 
 \item{...}{Additional arguments to be passed to the statistical tests.}
 }
@@ -39,7 +50,10 @@ An S4 object of class \code{statresult}, which includes:
 \item{p_position}{A data frame indicating the position of p-values for visualization purposes.}
 }
 \description{
-\if{html}{\out{<div class="sourceCode">}}\preformatted{Depending on the characteristics of the data, it automatically determines whether to use parametric tests (t-test, Welch's t-test) or non-parametric tests (Wilcoxon test).
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Depending on the characteristics of the data, it automatically determines
+whether to use parametric tests (t-test, Welch's t-test) or
+non-parametric tests (Wilcoxon test). Users may also force the use of
+parametric or non-parametric tests.
 }\if{html}{\out{</div>}}
 }
 \examples{
@@ -48,15 +62,44 @@ An S4 object of class \code{statresult}, which includes:
 data("ToothGrowth")
 
 df <- ToothGrowth \%>\%
-filter(dose \%in\% c("0.5", "1"))
+  filter(dose \%in\% c("0.5", "1"))
 
-result <- stat2(data = df, variable = "supp",
-id = "VC", group = "dose", value = "len",
-formula = len ~ dose)
+# Automatic selection
+result_auto <- stat2(
+  data = df,
+  variable = "supp",
+  id = "VC",
+  group = "dose",
+  value = "len",
+  formula = len ~ dose,
+  parametric = NULL
+)
+result_auto@stat
+result_auto@normal
+result_auto@p_position
 
-# Inspect results
-result@stat
-result@normal
-result@p_position
+# Force parametric test
+result_param <- stat2(
+  data = df,
+  variable = "supp",
+  id = "VC",
+  group = "dose",
+  value = "len",
+  formula = len ~ dose,
+  parametric = TRUE
+)
+result_param@stat
+
+# Force non-parametric test
+result_nonparam <- stat2(
+  data = df,
+  variable = "supp",
+  id = "VC",
+  group = "dose",
+  value = "len",
+  formula = len ~ dose,
+  parametric = FALSE
+)
+result_nonparam@stat
 }
 }
