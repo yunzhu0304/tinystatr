@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/26489242/README.md)
+
 # tinystatr, an automated process of selecting statistical methods <a href="https://maze-icicle-277.notion.site/Tinystatr-an-automated-process-of-selecting-statistical-methods-fcae55ded6f34e9f99cd25c661851f44"><img src="man/figure/logo.svg" align="right" height="139" alt="tinystatr website" /></a>
 
 
