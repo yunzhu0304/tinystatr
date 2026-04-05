@@ -1,9 +1,9 @@
 #' @title Perform Analysis of Variance with Filtering
 #' @description
-#' This function conducts an analysis of variance (ANOVA) after filtering data based on a specified variable and its corresponding identifier.
+#' This function conducts an analysis of variance (ANOVA) after filtering data
+#' based on a specified variable and its corresponding identifier.
 #'
-#'
-#' @param data A data frame containing the dataset.
+#' @param data A data object coercible to a data.frame containing the dataset.
 #' @param variable A character string specifying the variable in the dataset used for filtering.
 #' @param id A character string specifying the identifier value to filter the data.
 #' @param formula A formula specifying the model for the analysis of variance.
@@ -11,44 +11,37 @@
 #'
 #' @return An ANOVA object.
 #'
-#' @seealso \code{\link[stats]{aov}} for more advanced t-test functionality.
+#' @seealso \code{\link[stats]{aov}} for more advanced ANOVA functionality.
 #'
-#' @importFrom dplyr filter %>% mutate sym select all_of
-#' @importFrom stats median sd aov
+#' @importFrom dplyr filter %>%
+#' @importFrom stats aov
 #' @export
 #'
 #' @examples
 #' \donttest{
-#' # Load data
-#' #:::::::::::::::::::::::::::::::::::::::
 #' data("ToothGrowth")
-#'
 #' df <- ToothGrowth
 #' anof(data = df, variable = "supp", id = "VC", formula = len ~ dose)
 #' }
-#'
 anof <- function(data,
                  variable,
                  id,
-                 formula, ...){
+                 formula, ...) {
+  data <- .as_df(data)
+
   data %>%
-    filter(.data[[variable]] == id) %>%
-    aov(data=., formula,...)
+    dplyr::filter(.data[[variable]] == id) %>%
+    stats::aov(formula = formula, data = ., ...)
 }
 
 
 
-
 #' @title Perform Kruskal-Wallis Test with Filtering
 #' @description
-#' This function conducts a Kruskal-Wallis test after filtering data based on a specified variable and its corresponding identifier.
+#' This function conducts a Kruskal-Wallis test after filtering data based on
+#' a specified variable and its corresponding identifier.
 #'
-#'
-#' @title Perform Kruskal-Wallis Test with Filtering
-#' @description
-#' This function conducts a Kruskal-Wallis test after filtering data based on a specified variable and its corresponding identifier.
-#'
-#' @param data A data frame containing the dataset.
+#' @param data A data object coercible to a data.frame containing the dataset.
 #' @param variable A character string specifying the variable in the dataset used for filtering.
 #' @param id A character string specifying the identifier value to filter the data.
 #' @param formula A formula specifying the model for the Kruskal-Wallis test.
@@ -64,20 +57,17 @@ anof <- function(data,
 #'
 #' @examples
 #' \donttest{
-#' # Load data
 #' data("ToothGrowth")
-#'
 #' df <- ToothGrowth
 #' kwf(data = df, variable = "supp", id = "VC", formula = len ~ dose)
 #' }
-
-
 kwf <- function(data,
                 variable,
                 id,
-                formula, ...){
-  data %>%
-    filter(.data[[variable]] == id) %>%
-    kruskal_test(data=., formula,...)
-}
+                formula, ...) {
+  data <- .as_df(data)
 
+  data %>%
+    dplyr::filter(.data[[variable]] == id) %>%
+    rstatix::kruskal_test(formula = formula, data = ., ...)
+}

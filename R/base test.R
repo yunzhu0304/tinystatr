@@ -41,10 +41,13 @@ tf <- function(data,
                variable,
                id,
                formula,
-               var.equal = TRUE,...) {
+               var.equal = TRUE,
+               ...) {
+  data <- .as_df(data)
+
   data %>%
-    filter(.data[[variable]] == id) %>%
-    t_test(formula,...)
+    dplyr::filter(.data[[variable]] == id) %>%
+    rstatix::t_test(formula, var.equal = var.equal, ...)
 }
 
 
@@ -93,10 +96,13 @@ welch_tf <- function(data,
                      variable,
                      id,
                      formula,
-                     var.equal = FALSE,...) {
+                     var.equal = FALSE,
+                     ...) {
+  data <- .as_df(data)
+
   data %>%
-    filter(.data[[variable]] == id) %>%
-    t_test(formula,...)
+    dplyr::filter(.data[[variable]] == id) %>%
+    rstatix::t_test(formula, var.equal = var.equal, ...)
 }
 
 
@@ -146,6 +152,7 @@ wf <- function(data,
                formula,
                var.equal = FALSE,
                ...) {
+  data <- .as_df(data)
 
   df <- data %>%
     dplyr::filter(.data[[variable]] == id)
@@ -157,16 +164,15 @@ wf <- function(data,
   df <- df %>%
     dplyr::filter(!is.na(.data[[resp]]), !is.na(.data[[grp]]))
 
-
   glevels <- levels(factor(df[[grp]]))
   n1 <- sum(df[[grp]] == glevels[1], na.rm = TRUE)
   n2 <- sum(df[[grp]] == glevels[2], na.rm = TRUE)
 
-
   dots <- list(...)
-  res <- do.call(stats::wilcox.test,
-                 c(list(formula = formula, data = df), dots))
-
+  res <- do.call(
+    stats::wilcox.test,
+    c(list(formula = formula, data = df), dots)
+  )
 
   tibble::tibble(
     group1 = as.character(glevels[1]),
@@ -174,7 +180,6 @@ wf <- function(data,
     n1     = n1,
     n2     = n2,
     p      = format_p(unname(res$p.value), digits = 4) %>% as.numeric()
-
   )
 }
 

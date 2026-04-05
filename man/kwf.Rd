@@ -7,7 +7,7 @@
 kwf(data, variable, id, formula, ...)
 }
 \arguments{
-\item{data}{A data frame containing the dataset.}
+\item{data}{A data object coercible to a data.frame containing the dataset.}
 
 \item{variable}{A character string specifying the variable in the dataset used for filtering.}
 
@@ -21,15 +21,12 @@ kwf(data, variable, id, formula, ...)
 A Kruskal-Wallis test object.
 }
 \description{
-This function conducts a Kruskal-Wallis test after filtering data based on a specified variable and its corresponding identifier.
-
-This function conducts a Kruskal-Wallis test after filtering data based on a specified variable and its corresponding identifier.
+This function conducts a Kruskal-Wallis test after filtering data based on
+a specified variable and its corresponding identifier.
 }
 \examples{
 \donttest{
-# Load data
 data("ToothGrowth")
-
 df <- ToothGrowth
 kwf(data = df, variable = "supp", id = "VC", formula = len ~ dose)
 }

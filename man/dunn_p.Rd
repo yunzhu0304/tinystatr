@@ -7,7 +7,7 @@
 dunn_p(data, group, variable, id, formula, method = "bonferroni", ...)
 }
 \arguments{
-\item{data}{A data frame containing the dataset.}
+\item{data}{A data object coercible to a data.frame containing the dataset.}
 
 \item{group}{A character string specifying the grouping variable in the dataset.}
 
@@ -15,9 +15,9 @@ dunn_p(data, group, variable, id, formula, method = "bonferroni", ...)
 
 \item{id}{A character string specifying the identifier value to filter the data.}
 
-\item{formula}{A formula specifying the model for the post-hoc test. For example, formula = TP53 ~ cancer_group.}
+\item{formula}{A formula specifying the model for the post-hoc test. For example, \code{TP53 ~ cancer_group}.}
 
-\item{method}{Allowed values include "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none". Default is "bonferroni".}
+\item{method}{Allowed values include \code{"holm"}, \code{"hochberg"}, \code{"hommel"}, \code{"bonferroni"}, \code{"BH"}, \code{"BY"}, \code{"fdr"}, \code{"none"}. Default is \code{"bonferroni"}.}
 
 \item{...}{Additional arguments to be passed.}
 }
@@ -32,13 +32,10 @@ variable and its corresponding identifier.
 }
 \examples{
 \donttest{
-# Load data
 data("ToothGrowth")
-
 df <- ToothGrowth
 dunn_p(data = df, group = "dose", variable = "supp", id = "VC", formula = len ~ dose)
 }
-
 }
 \seealso{
 \code{\link[rstatix]{dunn_test}} for more information on Dunn's test.
